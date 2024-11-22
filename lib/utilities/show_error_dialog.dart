@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 Future<void> showErrorDialog(
   BuildContext context,
  String text,
- ){
+ )  async {
 
-  return showDialog(
+  return showDialog<void>(
     context: context, 
     builder: (context){
 
     return AlertDialog(
       title:  const Text('An error occurred'),
+      content: Text(text),
       actions: [
         TextButton(
           onPressed: (){
@@ -22,7 +23,6 @@ Future<void> showErrorDialog(
     );
   });
  }
-
 
 
 

@@ -1,4 +1,6 @@
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mynotes/firebase_options.dart';
 import 'package:mynotes/services/auth/auth_user.dart';
 import 'package:mynotes/services/auth/auth_provider.dart';
 import 'package:mynotes/services/auth/auth_exception.dart';
@@ -9,8 +11,16 @@ import 'package:firebase_auth/firebase_auth.dart'
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
-  Future<AuthUser> createUser({required String email, 
-  required String password,
+  Future<void>  initialize() async{
+  await  Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+         );
+  }
+
+  @override
+  Future<AuthUser> createUser({
+    required String email, 
+   required String password,
   }) async {
     try{
 
@@ -29,20 +39,18 @@ class FirebaseAuthProvider implements AuthProvider {
 
            throw WeakPasswordAuthException();       
                       
-        }else if (e.code == ' email-already-in-use'){
-
-            throw EmailAlreadyInAuthException();          
-                      
-        }else if (e.code == 'invalid-email'){
+        }else if (e.code == 'email-already-in-use') {
+         throw EmailAlreadyInUseAuthException();
+       }else if (e.code == 'invalid-email'){
 
                throw InvalidEmailAuthException();      
          }else{
 
-            throw GenericInAuthException();         
+            throw GenericAuthException();         
          }
 
     } catch(_){
-            throw GenericInAuthException();
+            throw GenericAuthException();
     }
   }
 
@@ -82,10 +90,10 @@ class FirebaseAuthProvider implements AuthProvider {
                   
                     throw WrongPasswordAuthException();
                    }else{
-                    throw GenericInAuthException();
+                    throw GenericAuthException();
                    } 
                   } catch(_){
-                    throw GenericInAuthException();
+                    throw GenericAuthException();
                   }
   }
 
@@ -109,5 +117,10 @@ class FirebaseAuthProvider implements AuthProvider {
     }
     
   }
+  
+
+ 
+  
+ 
 
 }
